@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sms.entities.Student;
+import com.sms.exceptions.ResourceNotFoundException;
 import com.sms.model.StudentDTO;
 import com.sms.repository.StudentRepository;
 import com.sms.service.StudentSerive;
@@ -40,13 +41,19 @@ public class StudentServiceImpl implements StudentSerive
 	}
 	@Override
 	public StudentDTO getStudentById(Long id) {
-		// TODO Auto-generated method stub
-		Student stud=studentRepository.findById(id).get();
+		// TODO Auto-generated method stu
+		
+		Student stud=studentRepository.findById(id).orElseThrow(()->
+				new ResourceNotFoundException("Student","Id", id)
+				);
 		return converter.convertToStudentDTO(stud);
 	}
 	@Override
 	public String deleteStudent(Long id) {
 		// TODO Auto-generated method stub
+		studentRepository.findById(id).orElseThrow(()->
+		new ResourceNotFoundException("Student","Id", id)
+		);
 		studentRepository.deleteById(id);
 		return "Student deleted ." ;
 	}
